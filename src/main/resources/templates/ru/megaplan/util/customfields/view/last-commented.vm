@@ -1,0 +1,29 @@
+#if ($value)
+    #if ($value.intValue() < 60)
+        Less than a minute ago
+    #else
+        $!dateutils.formatDurationPretty($value.longValue()) ago
+    #end
+    #if ($issue)
+        #if (!$issue.resolution && $value.intValue() > 604800)
+        <style>
+        <!--
+            #issuerow${issue.id} *
+            {
+                color: #cc0000;
+            }
+        -->
+        </style>
+        #end
+        #if (!$issue.resolution && $value.intValue() > 2419200)
+        <style>
+        <!--
+            #issuerow${issue.id} *
+            {
+                font-weight: bold;
+            }
+        -->
+        </style>
+        #end
+    #end
+#end

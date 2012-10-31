@@ -1,0 +1,10 @@
+<tr bgcolor="#ffffff">
+    <td align="right" valign="top" bgcolor="#fffff0">
+        <span class="label">User:</span>
+    </td>
+    <td bgcolor="#ffffff" nowrap>
+        <input name="user" id="user">
+        </input>
+        <br><font size="1">Select the User to be validated</font>
+    </td>
+</tr>

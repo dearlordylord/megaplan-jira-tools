@@ -1,0 +1,7 @@
+#if ($value)
+    #if ($value.intValue() < 60)
+        $xmlutils.escape('Less than a minute ago')
+    #else
+        $!dateutils.formatDurationPretty($value.longValue()) ago
+    #end
+#end

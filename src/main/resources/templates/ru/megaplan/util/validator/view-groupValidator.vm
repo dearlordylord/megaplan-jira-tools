@@ -1,0 +1,3 @@
+#if ($group)
+    Group '$group' is Required.
+#end

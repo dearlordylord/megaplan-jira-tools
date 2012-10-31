@@ -1,0 +1,11 @@
+#if ($errorMessages)
+   #foreach ($error in $errorMessages)
+     $error
+   #end
+#end
+<p>Enter status ID</p>
+<form action="CFEditStatusAction.jspa">
+    <input name="statusId" value="$!statusId"></input>
+    <input type="hidden" name="customFieldId" value="$!customFieldId"></input>
+    <input type="submit"></input>
+</form>

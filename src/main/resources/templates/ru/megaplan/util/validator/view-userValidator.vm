@@ -1,0 +1,3 @@
+#if ($user)
+    User '$user' is Required.
+#end

@@ -1,0 +1,17 @@
+<tr bgcolor="#ffffff">
+    <td align="right" valign="top" bgcolor="#fffff0">
+        <span class="label">Groups:</span>
+    </td>
+    <td bgcolor="#ffffff" nowrap>
+        <select name="group" id="group">
+        #foreach ($g in $groups)
+            <option value="$g.name"
+            #if ($g.name.equals($group))
+                SELECTED
+            #end
+            >$g.name</option>
+        #end
+        </select>
+        <br><font size="1">Select the Group to be validated</font>
+    </td>
+</tr>

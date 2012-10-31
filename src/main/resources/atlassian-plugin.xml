@@ -1,0 +1,147 @@
+<atlassian-plugin key="${project.groupId}.${project.artifactId}" name="${project.name}" plugins-version="2">
+    <plugin-info>
+        <description>${project.description}</description>
+        <version>${project.version}</version>
+        <vendor name="${project.organization.name}" url="${project.organization.url}" />
+    </plugin-info>
+    <web-resource key="wordwrap-issuescreen-description" name="WordwrapIssueScreen" >
+        <resource type="download" name="wordwrap-issuescreen-description.css" location="css/ru/megaplan/jira/plugins/util/wordwrap-issuescreen-description.css" />
+        <context>jira.view.issue</context>
+    </web-resource>
+    <web-resource key="multiselects-to-tags" name="Multiselects To Tags script" >
+        <resource type="download" name="multiselectToTagForm.js" location="js/multiselectToTagForm.js" />
+        <context>atl.general</context>
+    </web-resource>
+    <workflow-validator key="group-validator" name="Group Validator"
+                        class="ru.megaplan.jira.plugin.tools.validators.UserInGroupValidatorFactory">
+        <description>User In Group validator</description>
+
+        <validator-class>
+            ru.megaplan.jira.plugin.tools.validators.UserInGroupValidator
+        </validator-class>
+
+        <resource type="velocity" name="view"
+                  location="templates/ru/megaplan/util/validator/view-groupValidator.vm"/>
+        <resource type="velocity" name="input-parameters"
+                  location="templates/ru/megaplan/util/validator/edit-groupValidator.vm"/>
+        <resource type="velocity" name="edit-parameters"
+                  location="templates/ru/megaplan/util/validator/edit-groupValidator.vm"/>
+    </workflow-validator>
+    <workflow-validator key="user-validator" name="User Validator"
+                        class="ru.megaplan.jira.plugin.tools.validators.ConcreteUserValidatorFactory">
+        <description>User validator</description>
+
+        <validator-class>
+            ru.megaplan.jira.plugin.tools.validators.ConcreteUserValidator
+        </validator-class>
+
+        <resource type="velocity" name="view"
+                  location="templates/ru/megaplan/util/validator/view-userValidator.vm"/>
+        <resource type="velocity" name="input-parameters"
+                  location="templates/ru/megaplan/util/validator/edit-userValidator.vm"/>
+        <resource type="velocity" name="edit-parameters"
+                  location="templates/ru/megaplan/util/validator/edit-userValidator.vm"/>
+    </workflow-validator>
+    <webwork1 key="megaplan-util-actions" name="Mega Util plugin actions">
+        <actions>
+            <action name="ru.megaplan.jira.plugin.tools.actions.FireEventAction" alias="FireEventAction">
+                <view name="success">/templates/ru/megaplan/util/action/viewAction.vm</view>
+                <command name="slacreation" alias="FireEventActionSlaCreation">
+                    <view name="success">/templates/ru/megaplan/util/action/viewAction.vm</view>
+                </command>
+            </action>
+            <action name="ru.megaplan.jira.plugin.tools.actions.CFEditStatusAction" alias="CFEditStatusAction">
+                <view name="input">/templates/ru/megaplan/util/action/cf-status-edit-action.vm</view>
+            </action>
+        </actions>
+    </webwork1>
+
+    <customfield-type key="authorOfLastComment" name="Username of last commenter"
+                      class="ru.megaplan.jira.plugin.tools.customfields.AuthorOfLastCommentCFType">
+        <description>Display the username of  the last commenter</description>
+        <resource type="velocity" name="column-view" location="templates/plugins/fields/view/view-user.vm"/>
+        <resource type="velocity" name="xml" location="templates/plugins/fields/xml/xml-user.vm"/>
+    </customfield-type>
+
+    <customfield-type key="lastCommentedByClient" name="MPS Last commented by a Client Flag"
+                      class="ru.megaplan.jira.plugin.tools.customfields.MPSLastCommentedByClientCFType">
+        <description>Displays true if last commenter who is a email-account</description>
+        <resource type="velocity" name="column-view" location="templates/plugins/fields/view/view-basictext.vm"/>
+        <resource type="velocity" name="xml" location="templates/ru/megaplan/util/customfields/xml/xml-basictext.vm"/>
+    </customfield-type>
+
+    <customfield-type key="hoursSinceLastCommented" name="Hours since last comment"
+                      class="ru.megaplan.jira.plugin.tools.customfields.TimeLastCommentedCFType">
+        <description>Hours since last comment</description>
+        <resource type="velocity" name="view" location="templates/ru/megaplan/util/customfields/view/last-commented.vm"/>
+        <resource type="velocity" name="xml" location="templates/ru/megaplan/util/customfields/xml/xml-lastcommented.vm"/>
+    </customfield-type>
+
+     <customfield-searcher key="userpickersearcher" name="User Picker Searcher"
+                         class="ru.megaplan.jira.plugin.tools.customfields.searcher.UserPickerSearcher">
+       <description>Allow to search for a user using a userpicker.</description>
+       <resource type="velocity" name="label"
+                 location="templates/plugins/fields/view-searcher/label-searcher-user.vm"/>
+       <resource type="velocity" name="view"
+                 location="templates/plugins/fields/view-searcher/view-searcher-basictext.vm"/>
+       <valid-customfield-type package="ru.megaplan.jira.plugins.megaplan-jira-tools" key="authorOfLastComment"/>
+   </customfield-searcher>
+
+   <customfield-searcher key="lastcommentersearcher" name="Last commenter Searcher"
+                         class="ru.megaplan.jira.plugin.tools.customfields.searcher.LastCommentSearcher">
+       <description>Search for true only</description>
+       <resource type="velocity" name="view" location="templates/plugins/fields/view-searcher/view-searcher-basictext.vm"/>
+
+       <valid-customfield-type package="ru.megaplan.jira.plugins.megaplan-jira-tools" key="lastCommentedByClient"/>
+   </customfield-searcher>
+
+    <customfield-type key="lastcommentscf" name="Last Comment" class="ru.megaplan.jira.plugin.tools.customfields.LastCommentsCFType">
+        <description>Displays the latest comment(s) for an issue in a custom field.</description>
+        <resource type="velocity" name="view" location="templates/plugins/fields/view/view-basictext.vm" />
+       <!-- <resource type="velocity" name="edit" location="templates/plugins/fields/edit/edit-readonly.vm" />  -->
+        <resource type="velocity" name="xml" location="templates/plugins/fields/xml/xml-basictext.vm" />
+    </customfield-type>
+
+    <customfield-type key="timeinstatus" name="Time in concrete Status" class="ru.megaplan.jira.plugin.tools.customfields.TimeInStatusCFType">
+        <description>Used for time in status filtering.</description>
+        <resource type="velocity" name="view" location="/templates/ru/megaplan/util/customfields/view/timeinstatus-view.vm"/>
+    </customfield-type>
+
+    <customfield-type key="comments" name="Number of comments"
+                      class="ru.megaplan.jira.plugin.tools.customfields.CommentCountCFType">
+        <description>A custom field that stores the number of comments for an issue.</description>
+
+        <resource type="velocity" name="view" location="templates/plugins/fields/view/view-number.vm"/>
+        <resource type="velocity" name="xml" location="templates/plugins/fields/xml/xml-number.vm"/>
+    </customfield-type>
+
+    <customfield-searcher key="numberrange" name="Number range searcher"
+                          i18n-name-key="admin.customfield.searcher.numberrange.name"
+                          class="ru.megaplan.jira.plugin.tools.customfields.searcher.NumberRangeSearcherMins">
+        <description key="admin.customfield.searcher.numberrange.desc">Allow searching for a number that is in a given range</description>
+
+        <resource type="velocity" name="search" location="templates/plugins/fields/edit-searcher/search-number-range.vm"/>
+        <resource type="velocity" name="view" location="templates/plugins/fields/view-searcher/view-searcher-number-range.vm"/>
+
+        <valid-customfield-type package="ru.megaplan.jira.plugins.megaplan-jira-tools" key="timeinstatus"/>
+        <valid-customfield-type package="ru.megaplan.jira.plugins.megaplan-jira-tools" key="comments"/>
+    </customfield-searcher>
+
+    <component-import key="pluginSettingsFactory">
+        <interface>com.atlassian.sal.api.pluginsettings.PluginSettingsFactory</interface>
+    </component-import>
+
+
+    <component-import key="eventPublisher" interface="com.atlassian.event.api.EventPublisher"/>
+    <servlet-filter name="Mega remainEstimate Servlet Filter" key="megaRemainEstimateServletFilter"
+                    class="ru.megaplan.jira.plugin.tools.servlet.filter.RemainingEstimateServletFilter"
+                    location="before-decoration" weight="900">
+        <description>Mega remainEstimate Servlet Filter.</description>
+        <url-pattern>*secure/CreateWorklog!default.jspa</url-pattern>
+        <url-pattern>*secure/CreateWorklog.jspa</url-pattern>
+        <dispatcher>REQUEST</dispatcher>
+        <dispatcher>FORWARD</dispatcher>
+        <dispatcher>INCLUDE</dispatcher>
+    </servlet-filter>
+
+</atlassian-plugin>
