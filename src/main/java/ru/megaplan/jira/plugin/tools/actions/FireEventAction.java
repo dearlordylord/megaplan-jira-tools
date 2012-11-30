@@ -11,6 +11,7 @@ import com.atlassian.jira.config.properties.APKeys;
 import com.atlassian.jira.config.properties.ApplicationProperties;
 import com.atlassian.jira.event.issue.IssueEvent;
 import com.atlassian.jira.event.issue.IssueEventManager;
+import com.atlassian.jira.event.type.EventDispatchOption;
 import com.atlassian.jira.event.type.EventType;
 import com.atlassian.jira.event.type.EventTypeManager;
 import com.atlassian.jira.issue.*;
@@ -131,32 +132,24 @@ public class FireEventAction extends JiraWebActionSupport {
         return SUCCESS;
     }
 
-    public String doMigrateField() throws GenericEntityException {
-        CustomField oldExpireTimeCf = customFieldManager.getCustomFieldObjectByName("Дата окончания поддержки2");
-        CustomField newExpireTimeCf = customFieldManager.getCustomFieldObjectByName("Дата окончания поддержки2");
-        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        DateFormat inputDateFormat = new SimpleDateFormat("d/MMM/yy");
+    public String doMigratefield() throws GenericEntityException {
+        CustomField oldCf = customFieldManager.getCustomFieldObjectByName("Задача в Megaplan");
+        CustomField newCf = customFieldManager.getCustomFieldObjectByName("Исходная задача");
         User megabot = userManager.getUser("megaplan");
         List<String> issuesStrings = new ArrayList<String>();
         int cap = 1000;
         int iter = 0;
-        for (Long id : issueManager.getIssueIdsForProject(projectManager.getProjectObjByKey("MPS").getId())) {
+        for (Long id : issueManager.getIssueIdsForProject(projectManager.getProjectObjByKey("PU").getId())) {
             Issue i = issueManager.getIssueObject(id);
-            Object oldTimeObject = i.getCustomFieldValue(oldExpireTimeCf);
-            if (oldTimeObject != null) {
-                Date sqlFormatDate = null;
-                try {
-                    sqlFormatDate = new Date(dateFormat.parse(oldTimeObject.toString()).getTime());
-                } catch (ParseException e) {
-                    continue;
-                }
+            Object oldObject = i.getCustomFieldValue(oldCf);
+            if (oldObject != null) {
                 IssueInputParameters iip = issueService.newIssueInputParameters();
-                iip.addCustomFieldValue(newExpireTimeCf.getIdAsLong(), inputDateFormat.format(sqlFormatDate));
-                iip.addCustomFieldValue(oldExpireTimeCf.getIdAsLong(), "");
+                iip.addCustomFieldValue(newCf.getIdAsLong(), oldObject.toString());
+                iip.addCustomFieldValue(oldCf.getIdAsLong(), "");
                 IssueService.UpdateValidationResult issueValidationResult = issueService.validateUpdate(megabot, i.getId(), iip);
-                issuesStrings.add(i.getKey() + " : " + sqlFormatDate.toString());
+                issuesStrings.add(i.getKey() + " : " + oldObject.toString());
                 if (issueValidationResult.isValid()) {
-                    issueService.update(megabot,issueValidationResult);
+                    issueService.update(megabot ,issueValidationResult, EventDispatchOption.DO_NOT_DISPATCH, false);
                 } else {
                     issuesStrings.add(issueValidationResult.getErrorCollection().getErrors().toString());
                 }

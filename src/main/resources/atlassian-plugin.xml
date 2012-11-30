@@ -46,7 +46,7 @@
         <actions>
             <action name="ru.megaplan.jira.plugin.tools.actions.FireEventAction" alias="FireEventAction">
                 <view name="success">/templates/ru/megaplan/util/action/viewAction.vm</view>
-                <command name="slacreation" alias="FireEventActionSlaCreation">
+                <command name="migratefield" alias="FireMigrateField">
                     <view name="success">/templates/ru/megaplan/util/action/viewAction.vm</view>
                 </command>
             </action>

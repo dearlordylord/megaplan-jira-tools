@@ -7,6 +7,8 @@ import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Created with IntelliJ IDEA.
@@ -16,6 +18,16 @@ import java.io.IOException;
  * To change this template use File | Settings | File Templates.
  */
 public class RemainingEstimateServletFilter implements Filter {
+
+    private final static Set<String> enabledProjects = new HashSet<String>();
+
+    {
+        enabledProjects.add("MP");
+        enabledProjects.add("PU");
+        //enabledProjects.add("ONEC");
+        //enabledProjects.add("NAV");
+        //enabledProjects.add("UTINET");
+    }
 
     //TODO: refactor this shit in js include with jira event "content changed" listener
 
@@ -64,7 +76,7 @@ public class RemainingEstimateServletFilter implements Filter {
     private boolean isInEnabledProjects(String id) {
         Issue issue = issueManager.getIssueObject(Long.parseLong(id));
         String pk = issue.getProjectObject().getKey();
-        return ("MP".equals(pk)||"PU".equals(pk));
+        return (enabledProjects.contains(pk));
     }
 
     @Override
